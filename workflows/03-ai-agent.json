@@ -1,0 +1,134 @@
+{
+  "name": "Lesson 04 - AI Agent",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b58e795b-b260-4cfe-9978-67db4231db7a",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "17e0d6fd-dfe5-4b19-a678-11bc5aedd53d",
+              "name": "sales_person",
+              "value": "山田",
+              "type": "string"
+            },
+            {
+              "id": "6d2ec8d0-e69c-451c-8937-f9aae6ce84b2",
+              "name": "company",
+              "value": "株式会社サンプル製造",
+              "type": "string"
+            },
+            {
+              "id": "de4a1c4f-4d07-4aed-9b6d-13b520c66f0b",
+              "name": "goal",
+              "value": "株式会社サンプル製造の最新の企業情報を調査し、 その情報をもとに初回商談の提案を作成してください",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "b53e7e74-412f-4f62-9379-d804fa1c5322",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=あなたは法人営業を支援するAIエージェントです。\n\n以下の情報をもとに、営業担当者が初回商談に向けて行うべき準備を考えてください。\n\n営業担当者：\n{{ $json.sales_person }}\n\n商談先企業：\n{{ $json.company }}\n\n目的：\n{{ $json.goal }}\n\n営業担当者が次に取るべき行動を、具体的に提案してください。",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        448,
+        0
+      ],
+      "id": "8bc70a1c-d068-4971-9950-35640fc203c0",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        320,
+        208
+      ],
+      "id": "322f681b-a074-4822-90f7-316990679b76",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "3lqW0SyXCfpuUDc0",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "71680a36-2d00-48c2-9179-ad42bf82e7c8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "786e55837483dba32c2a3f49da8295e86a69bf5c86f4beea8ff7099c3a9179a0"
+  },
+  "nodeGroups": [],
+  "id": "kwpwvRDyd5wAQHBS",
+  "tags": []
+}
