@@ -98,16 +98,16 @@ AI Agent では、LLM が目的や状況を解釈し、**必要な Tool を選�
 
 ## 📚 カリキュラム
 
-| Lesson                                         | 内容                                   | 状態        |
-| ---------------------------------------------- | -------------------------------------- | ----------- |
-| [Lesson 01](./docs/lesson01-setup.md)          | n8n Community Edition の環境構築       | ✅ 完成     |
-| [Lesson 02](./docs/lesson02-basic-workflow.md) | 基本 Workflow / JSON / Expression / If | ✅ 完成     |
-| Lesson 03                                      | Gemini を n8n に接続する               | 🚧 制作予定 |
-| Lesson 04                                      | AI Agent を構築する                    | 🚧 制作予定 |
-| Lesson 05                                      | Tool Calling を実装する                | 🚧 制作予定 |
-| Lesson 06                                      | Human-in-the-loop を実装する           | 🚧 制作予定 |
-| Lesson 07                                      | Google Sheets / Slack 等と連携する     | 🚧 制作予定 |
-| Lesson 08                                      | 営業提案 AI エージェント完成・発展演習 | 🚧 制作予定 |
+| Lesson                                             | 内容                                   | 状態        |
+| -------------------------------------------------- | -------------------------------------- | ----------- |
+| [Lesson 01](./docs/lesson01-setup.md)              | n8n Community Edition の環境構築       | ✅ 完成     |
+| [Lesson 02](./docs/lesson02-basic-workflow.md)     | 基本 Workflow / JSON / Expression / If | ✅ 完成     |
+| [Lesson 03](./docs/lesson03-gemini-integration.md) | Gemini を n8n に接続する               | ✅ 完成     |
+| Lesson 04                                          | AI Agent を構築する                    | 🚧 制作予定 |
+| Lesson 05                                          | Tool Calling を実装する                | 🚧 制作予定 |
+| Lesson 06                                          | Human-in-the-loop を実装する           | 🚧 制作予定 |
+| Lesson 07                                          | Google Sheets / Slack 等と連携する     | 🚧 制作予定 |
+| Lesson 08                                          | 営業提案 AI エージェント完成・発展演習 | 🚧 制作予定 |
 
 ---
 
@@ -193,7 +193,7 @@ Lesson を見ながら自分で Workflow を作成したあと、JSON を n8n �
 
 本教材は以下の環境で制作・動作確認しています。
 
-- Windows 10
+- Windows 11
 - WSL2
 - Ubuntu 24.04
 - Docker Desktop
@@ -328,10 +328,13 @@ Human-in-the-loop
 
 ## 📌 Project Status
 
-**現在：Lesson 02 完成**
+**現在：Lesson 03 完成**
 
 次の実装：
 
-> **Lesson 03 — Gemini を n8n に接続する**
+> **Lesson 04 — AI Agent を構築する**
 
-ここから、通常の Workflow に LLM を組み込み、最終的な AI Agent / Tool Calling へ発展させます。
+Lesson 03 では通常の Workflow から Gemini を呼び出しました。
+
+Lesson 04 では Gemini を AI Agent の Chat Model として接続し、
+「LLM を利用した Workflow」と「AI Agent」の違いを実装を通して学びます。

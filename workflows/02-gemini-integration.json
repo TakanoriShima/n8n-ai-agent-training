@@ -1,0 +1,121 @@
+{
+  "name": "Lesson 03 - Gemini Integration",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "0af661cd-29f8-4fd2-aee1-97159fcaf854",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "64dc218b-62b5-4a84-92ba-7b2bb352175b",
+              "name": "sales_person",
+              "value": "山田",
+              "type": "string"
+            },
+            {
+              "id": "a1f55554-1200-4e86-aa7c-44ad27f3d90b",
+              "name": "company",
+              "value": "株式会社ABC",
+              "type": "string"
+            },
+            {
+              "id": "0b97b983-53d6-4eae-8b7f-298b6998a1b1",
+              "name": "request",
+              "value": "初回商談の提案を準備してください",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "5df2e04b-1fbe-405f-a07a-bf77cdb9c6ea",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "models/gemini-3-flash-preview"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=sales_person\n山田\n\ncompany\n株式会社サンプル製造\n\nrequest\n製造現場の業務効率化に向けた初回商談の提案を準備してください"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        0
+      ],
+      "id": "552bd33f-ca52-42b6-aca6-f172ded04ca3",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "3lqW0SyXCfpuUDc0",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "6e1065eb-e56b-4fb0-862d-884ee84ce250",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "786e55837483dba32c2a3f49da8295e86a69bf5c86f4beea8ff7099c3a9179a0"
+  },
+  "nodeGroups": [],
+  "id": "OPYjEQCdfPBnpXzU",
+  "tags": []
+}
