@@ -1,0 +1,122 @@
+{
+  "name": "Lesson 02 - Basic Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9c6a24bc-bdca-4c74-b7d1-b350d2306bb0",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "081f049a-b5c7-45fb-8e7e-4084b797de85",
+              "name": "sales_person",
+              "value": "山田",
+              "type": "string"
+            },
+            {
+              "id": "6b8c57df-2669-4921-a52e-110bd90c1214",
+              "name": "company",
+              "value": "株式会社ABC",
+              "type": "string"
+            },
+            {
+              "id": "fb363ae8-4223-4b5c-8cd6-122c9a4c7c3b",
+              "name": "request",
+              "value": "初回商談の提案を準備してください",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "cbf7816a-8869-48cd-8ca9-4edfd8b898d4",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "7d4671ef-d560-4e4c-a799-cd8c70380b72",
+              "leftValue": "={{ $json.company }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "0b86c31e-9158-4b3a-8d48-5d945383e612",
+      "name": "If"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "d952391f-1e68-4473-810b-166f05ec556c",
+  "meta": {
+    "instanceId": "786e55837483dba32c2a3f49da8295e86a69bf5c86f4beea8ff7099c3a9179a0"
+  },
+  "nodeGroups": [],
+  "id": "yFTge5TqLbBRI3Dx",
+  "tags": []
+}
