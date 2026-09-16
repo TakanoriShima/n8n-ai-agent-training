@@ -75,7 +75,7 @@ AI Agent を理解するには、まず通常の Workflow との違いを理解�
  ↓
 If
 ↙  ↘
-A   B
+A    B
 ```
 
 処理順序や判断条件は、**人間があらかじめ設計**します。
@@ -86,7 +86,7 @@ A   B
 ユーザーの目的
       ↓
    AI Agent
-   ↙   ↓   ↘
+   ↙  ↓  ↘
 Tool A Tool B Tool C
 ```
 
@@ -98,16 +98,16 @@ AI Agent では、LLM が目的や状況を解釈し、**利用可能な Tool �
 
 ## 📚 カリキュラム
 
-| Lesson                                             | 内容                                   | 主な学習テーマ                                    | 状態        |
-| -------------------------------------------------- | -------------------------------------- | ------------------------------------------------- | ----------- |
-| [Lesson 01](./docs/lesson01-setup.md)              | n8n Community Edition の環境構築       | Docker / n8n                                      | ✅ 完成     |
-| [Lesson 02](./docs/lesson02-basic-workflow.md)     | 基本 Workflow の構築                   | Trigger / JSON / Expression / If                  | ✅ 完成     |
-| [Lesson 03](./docs/lesson03-gemini-integration.md) | Gemini を n8n に接続する               | Gemini API / LLM / Prompt                         | ✅ 完成     |
-| [Lesson 04](./docs/lesson04-ai-agent.md)           | AI Agent を構築する                    | AI Agent / Chat Model / Tool なし Agent の限界    | ✅ 完成     |
-| [Lesson 05](./docs/lesson05-tool-calling.md)       | Tool Calling を実装する                | Code Tool / Tool Calling / Agent による Tool 選択 | ✅ 完成     |
-| Lesson 06                                          | Human-in-the-loop を実装する           | 承認 / 却下 / AI ガバナンス                       | 🚧 制作予定 |
-| Lesson 07                                          | Google Sheets / Slack 等と連携する     | 外部サービス / 業務システム連携                   | 🚧 制作予定 |
-| Lesson 08                                          | 営業提案 AI エージェント完成・発展演習 | Agent 設計 / 業務適用                             | 🚧 制作予定 |
+| Lesson                                             | 内容                                   | 主な学習テーマ                                           | 状態        |
+| -------------------------------------------------- | -------------------------------------- | -------------------------------------------------------- | ----------- |
+| [Lesson 01](./docs/lesson01-setup.md)              | n8n Community Edition の環境構築       | Docker / n8n                                             | ✅ 完成     |
+| [Lesson 02](./docs/lesson02-basic-workflow.md)     | 基本 Workflow の構築                   | Trigger / JSON / Expression / If                         | ✅ 完成     |
+| [Lesson 03](./docs/lesson03-gemini-integration.md) | Gemini を n8n に接続する               | Gemini API / LLM / Prompt                                | ✅ 完成     |
+| [Lesson 04](./docs/lesson04-ai-agent.md)           | AI Agent を構築する                    | AI Agent / Chat Model / Tool なし Agent の限界           | ✅ 完成     |
+| [Lesson 05](./docs/lesson05-tool-calling.md)       | Tool Calling を実装する                | Code Tool / Tool Calling / Agent による Tool 選択        | ✅ 完成     |
+| [Lesson 06](./docs/lesson06-human-in-the-loop.md)  | Human-in-the-loop を実装する           | Chat Trigger / Human Review / 承認・却下 / AI ガバナンス | ✅ 完成     |
+| Lesson 07                                          | Google Sheets / Slack 等と連携する     | 外部サービス / 業務システム連携                          | 🚧 制作予定 |
+| Lesson 08                                          | 営業提案 AI エージェント完成・発展演習 | Agent 設計 / 業務適用                                    | 🚧 制作予定 |
 
 ---
 
@@ -146,14 +146,15 @@ AI Agent では、LLM が目的や状況を解釈し、**利用可能な Tool �
 
 - Human-in-the-loop
 - AI による外部操作の制御
-- 人間による承認
+- 人間による承認・却下
+- Tool 実行前の Human Review
 - Credential / API キーの安全な管理
 
 ---
 
 ## 🏗️ 現在の実装
 
-現在、**Lesson 05 まで実装済み**です。
+現在、**Lesson 06 まで実装済み**です。
 
 ### Lesson 02：通常の Workflow
 
@@ -232,11 +233,11 @@ Lesson 04 の Agent は次の状態です。
 ```text
              AI Agent
                 │
-       ┌────────┼────────┐
-       ↓        ↓        ↓
- Chat Model   Memory    Tool
-       │        ×        ×
-    Gemini
+        ┌───────┼───────┐
+        ↓       ↓       ↓
+ Chat Model   Memory   Tool
+        │       ×       ×
+     Gemini
 ```
 
 Agent が外部の情報やシステムを利用する能力は、接続された Tool によって拡張されます。
@@ -257,7 +258,7 @@ Manual Trigger
    AI Agent
     ↙    ↘
 Gemini   Code Tool
-Chat     値引計算
+ Chat    値引計算
 Model
 ```
 
@@ -345,13 +346,16 @@ Lesson 04 と Lesson 05 の違いを整理すると、
 
 ```text
 Lesson 04
+
 AI Agent
     │
     └── Gemini
          ↓
-      推論・生成のみ
+       推論・生成のみ
+
 
 Lesson 05
+
 AI Agent
     │
     ├── Gemini
@@ -365,6 +369,131 @@ AI Agent
 
 Lesson 05 によって、AI Agent は単に文章を生成するだけではなく、**目的に応じて利用可能な Tool を選択し、その結果を利用して処理を続ける**構成へ発展しました。
 
+### Lesson 06：Human-in-the-loop を実装する
+
+Lesson 06 では、AI Agent が Tool を実行する前に、**人間による承認・却下を挟む Human-in-the-loop** を実装します。
+
+Lesson 05 では、AI Agent が目的に応じて Code Tool を自律的に選択できることを確認しました。
+
+Lesson 06 では、その Tool 実行をそのまま許可するのではなく、人間が内容を確認してから実行できる構成へ発展させます。
+
+```text
+When chat message received
+          ↓
+       AI Agent
+       ↙      ↘
+   Gemini   Human review
+              ↓
+            Chat
+        (Send and wait)
+              ↓
+        承認 / 却下
+              ↓
+          Code Tool
+```
+
+![Lesson 06 Human Review Workflow](./docs/images/93_n8n_lesson06_human_review_workflow.png)
+
+Chat Trigger の Response Mode は `Using Response Nodes` に設定します。
+
+これにより、AI Agent が Tool の実行を要求した際に、Chat 上で人間による確認を待機できます。
+
+例えば、
+
+```text
+見積金額850,000円を10%値引きした提案金額を計算してください。
+```
+
+と入力すると、AI Agent は Code Tool が必要であると判断します。
+
+しかし、Code Tool はすぐには実行されません。
+
+```text
+AI Agent
+   ↓
+Code Tool の使用を判断
+   ↓
+Human review
+   ↓
+人間の回答を待機
+```
+
+という状態になります。
+
+![Lesson 06 Human Review Waiting](./docs/images/95_n8n_lesson06_human_review_waiting.png)
+
+#### 承認した場合
+
+`Approve` を選択すると Code Tool が実行されます。
+
+Code Tool には、
+
+```text
+850000,10
+```
+
+が渡され、
+
+```json
+{
+  "originalAmount": 850000,
+  "discountRate": 10,
+  "discountedAmount": 765000
+}
+```
+
+という結果が返されます。
+
+![Lesson 06 Approved Tool Execution](./docs/images/96_n8n_lesson06_approved_tool_execution.png)
+
+その結果を Gemini が利用し、最終的に、
+
+```text
+見積金額850,000円から10%値引きした提案金額は、765,000円です。
+```
+
+という回答を生成します。
+
+![Lesson 06 Approved Final Response](./docs/images/102_n8n_lesson06_approved_final_response.png)
+
+#### 却下した場合
+
+一方、`Decline` を選択すると Tool の実行は承認されません。
+
+Human review の実行結果では、
+
+```text
+approved: false
+```
+
+となっていることを確認できます。
+
+![Lesson 06 Decline Approved False](./docs/images/104_n8n_lesson06_decline_approved_false.png)
+
+つまり、
+
+```text
+AI Agent が Tool を使いたいと判断
+              ↓
+        Human review
+          ↙       ↘
+      Approve    Decline
+         ↓          ↓
+    Tool 実行    Tool を実行しない
+```
+
+という制御が可能になります。
+
+これは、AI Agent を企業業務で利用する際の重要な設計です。
+
+AI に判断や Tool 選択を任せながらも、金額変更、データ更新、メール送信、外部システムへの登録など、影響の大きい操作については、**最終的な実行権限を人間に残す**ことができます。
+
+Lesson 06 によって、
+
+> **AI Agent の自律性と、人間による統制を組み合わせる Human-in-the-loop**
+
+の基本構成を実装できました。
+
 ---
 
 ## 📦 Workflow サンプル
@@ -376,7 +505,8 @@ workflows/
 ├─ 01-basic-workflow.json
 ├─ 02-gemini-integration.json
 ├─ 03-ai-agent.json
-└─ 04-tool-calling.json
+├─ 04-tool-calling.json
+└─ 05-human-in-the-loop.json
 ```
 
 Lesson を見ながら自分で Workflow を作成したあと、JSON を n8n へ Import して完成版と比較できます。
@@ -420,27 +550,25 @@ n8n-ai-agent/
 │  ├─ lesson03-gemini-integration.md
 │  ├─ lesson04-ai-agent.md
 │  ├─ lesson05-tool-calling.md
+│  ├─ lesson06-human-in-the-loop.md
 │  │
 │  └─ images/
 │     ├─ 01_n8n_owner_account_setup.png
 │     ├─ ...
-│     ├─ 48_n8n_ai_agent_without_tools.png
-│     ├─ 49_n8n_code_tool_discount_calculation.png
-│     ├─ 50_n8n_code_tool_initial.png
-│     ├─ 51_n8n_ai_agent_with_code_tool.png
-│     ├─ 53_n8n_tool_calling_logs.png
-│     ├─ 54_n8n_code_tool_execution.png
-│     ├─ 55_n8n_tool_calling_workflow.png
-│     └─ 56_n8n_tool_not_used.png
+│     ├─ 56_n8n_tool_not_used.png
+│     ├─ 64_n8n_lesson06_empty_workflow.png
+│     ├─ ...
+│     └─ 104_n8n_lesson06_decline_approved_false.png
 │
 └─ workflows/
    ├─ 01-basic-workflow.json
    ├─ 02-gemini-integration.json
    ├─ 03-ai-agent.json
-   └─ 04-tool-calling.json
+   ├─ 04-tool-calling.json
+   └─ 05-human-in-the-loop.json
 ```
 
-※ スクリーンショット番号 `52` は欠番です。
+※ スクリーンショット番号 `52` および `57`〜`63` は欠番です。
 
 ---
 
@@ -551,6 +679,26 @@ Tool を使用しない
 
 という Tool Calling の基本的な考え方を実行ログから理解できる構成としています。
 
+Lesson 06 では、さらに Tool 実行前に Human Review を追加し、
+
+```text
+AI が Tool の使用を判断
+          ↓
+     人間が確認
+       ↙    ↘
+    承認    却下
+     ↓       ↓
+   実行    実行しない
+```
+
+という制御を体験します。
+
+これにより、AI Agent の自律性だけではなく、
+
+> **どの処理を AI に任せ、どの処理に人間の判断を残すべきか**
+
+という AI ガバナンスの考え方まで学習できる構成としています。
+
 ---
 
 ## 🔄 発展例
@@ -577,7 +725,7 @@ Tool を使用しない
 
 ## 📌 Project Status
 
-**現在：Lesson 05 完成**
+**現在：Lesson 06 完成**
 
 ここまでに、
 
@@ -596,63 +744,85 @@ AI Agent + Gemini
       ↓
 Lesson 05
 AI Agent + Tool Calling
+      ↓
+Lesson 06
+Human-in-the-loop
 ```
 
 まで実装しました。
 
-Lesson 05 では、
+Lesson 06 では、Lesson 05 で構築した Tool Calling に、人間による承認プロセスを追加しました。
 
 ```text
-                AI Agent
-                   │
-         ┌─────────┴─────────┐
-         ↓                   ↓
-Gemini Chat Model         Code Tool
-         │                   │
-      推論・生成             計算
-         └─────────┬─────────┘
-                   ↓
-                最終回答
+                 AI Agent
+                    │
+          ┌─────────┴─────────┐
+          ↓                   ↓
+ Gemini Chat Model       Tool Calling
+                              ↓
+                        Human review
+                         ↙        ↘
+                    Approve     Decline
+                       ↓           ↓
+                  Code Tool     実行しない
 ```
 
-という構成を実装しました。
-
-さらに、
+これにより、
 
 ```text
-値引き計算が必要
+AI が判断する
       ↓
-Code Tool を使用
-
-計算が不要
+Tool の使用を要求する
       ↓
-Code Tool を使用しない
+人間が確認する
+   ↙        ↘
+承認        却下
+ ↓           ↓
+実行       実行しない
 ```
 
-という比較によって、**AI Agent が目的に応じて Tool を選択する Tool Calling の動作**を確認しました。
+という **Human-in-the-loop を含む AI Agent の制御**を実装しました。
 
-次の実装：
-
-> **Lesson 06 — Human-in-the-loop を実装する**
-
-Lesson 06 では、AI Agent が外部操作を実行する前に、人間による確認・承認を挟む構成へ発展させます。
+Lesson 04〜06 を通して、
 
 ```text
 AI Agent
-    ↓
-実行内容を作成
-    ↓
-Human-in-the-loop
-    ↓
-人間による確認
-  ↙         ↘
-承認        却下
- ↓
-Tool 実行
+   ↓
+Tool を利用できる
+   ↓
+必要な Tool を AI が選択する
+   ↓
+重要な Tool の実行前に人間が確認する
 ```
 
-Tool Calling によって AI Agent が「判断して処理を実行する」段階まで進んだため、次は、
+という段階的な発展を確認できます。
 
-> **どこまで AI に任せ、どの操作を人間が承認するべきか**
+これは、AI Agent にすべての操作を無条件で任せるのではなく、
 
-という、企業で AI Agent を安全に活用するための設計を学びます。
+> **AI の自律性を活用しながら、重要な操作の最終判断を人間に残す**
+
+という、企業で AI Agent を活用する際の基本的なガバナンス設計につながります。
+
+次の実装：
+
+> **Lesson 07 — Google Sheets / Slack 等の外部サービスと連携する**
+
+Lesson 07 では、これまで学習した AI Agent / Tool Calling / Human-in-the-loop を、実際の業務システムとの連携へ発展させます。
+
+```text
+ユーザー
+   ↓
+AI Agent
+   ↓
+Gemini
+   ↓
+Tool Calling
+   ↓
+Human-in-the-loop
+   ↓
+外部サービス
+   ├─ Google Sheets
+   └─ Slack 等
+```
+
+これにより、AI Agent が文章を生成するだけでなく、**人間の承認を経て実際の業務システムへ処理を反映する構成**へ発展させます。
