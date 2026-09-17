@@ -51,11 +51,11 @@ Manual Trigger と Edit Fields を追加します。
 
 Edit Fields では、営業案件を想定した次のデータを作成します。
 
-| Field        | Type   | Value                            |
-| ------------ | ------ | -------------------------------- |
-| sales_person | String | 山田                             |
-| company      | String | 株式会社 ABC                     |
-| request      | String | 初回商談の提案を準備してください |
+| Field | Type | Value |
+| --- | --- | --- |
+| sales_person | String | 山田 |
+| company | String | 株式会社ABC |
+| request | String | 初回商談の提案を準備してください |
 
 実行すると、Edit Fields から次のノードへ 1 件のデータが渡されます。
 
@@ -295,6 +295,7 @@ Gemini
 
 ```text
 Service unavailable
+
 This model is currently experiencing high demand.
 ```
 
@@ -328,7 +329,7 @@ workflows/
 └─ 02-gemini-integration.json
 ```
 
-Workflow JSON には Credential への参照情報が含まれる場合があります。
+n8n から Export した Workflow JSON には、Credential への参照情報が含まれる場合があります。
 
 例：
 
@@ -343,7 +344,17 @@ Workflow JSON には Credential への参照情報が含まれる場合があり
 
 API キーそのものは Workflow JSON へ直接記録せず、n8n の Credential として管理します。
 
-GitHub へ公開する前には、Workflow JSON に API キーなどの秘密情報が含まれていないことを必ず確認してください。
+また、この GitHub リポジトリで公開している Workflow JSON では、環境固有の情報や認証情報への参照を公開しないため、Credential、Credential ID などの情報を削除しています。
+
+そのため、公開されている Workflow JSON を Import した後は、自分の環境で Gemini API Credential を設定してください。
+
+> [!WARNING]
+> GitHub へ公開する前には、Workflow JSON に API キー、アクセストークン、Credential などの秘密情報や環境固有の識別情報が含まれていないことを必ず確認してください。
+
+> [!NOTE]
+> 公開している `02-gemini-integration.json` は、Section 8「動的な入力を試す」で入力内容を変更した後の、**Lesson 03 終了時点の最終状態**です。
+>
+> そのため、Lesson 前半で使用する `株式会社ABC` ではなく、`株式会社サンプル製造` などの動的入力が設定されています。
 
 ---
 
