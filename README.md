@@ -117,6 +117,53 @@ AI Agent では、LLM が目的や状況を解釈し、**利用可能な Tool
 
 ---
 
+## 📦 Workflow サンプルの利用について
+
+本リポジトリの `workflows/` ディレクトリには、各 Lesson で作成した n8n Workflow のサンプル JSON を公開しています。
+
+```text
+workflows/
+├─ 01-basic-workflow.json
+├─ 02-gemini-integration.json
+├─ 03-ai-agent.json
+├─ 04-tool-calling.json
+├─ 05-human-in-the-loop.json
+└─ 06-slack-sales-ai-agent.json
+```
+
+これらの JSON は n8n に Import して、教材の Workflow を再現するために利用できます。
+
+> **IMPORTANT** 公開用の Workflow JSON からは、セキュリティと環境依存情報の除去を目的として、Credential、Credential ID、Webhook ID、Workflow ID、Instance ID などを削除しています。
+> そのため、Import しただけではすべての Workflow がそのまま動作するわけではありません。
+
+Import 後は、各 Lesson の手順に従って、自分の環境で必要な設定を行ってください。
+
+代表的な再設定項目は次のとおりです。
+
+- Gemini API Credential
+- Slack Credential
+- Slack Channel
+- Webhook URL
+- その他、利用環境に依存する設定
+
+API キーやアクセストークンなどの秘密情報を JSON や GitHub リポジトリへ直接保存しないでください。
+
+本教材では、
+
+```text
+教材を読む
+    ↓
+Workflow JSON を Import
+    ↓
+自分の Credential / 環境設定を行う
+    ↓
+Workflow を実行
+    ↓
+各 Node の役割やデータの流れを確認する
+```
+
+という使い方を想定しています。
+
 ---
 
 ## 🧠 この教材で学べること
@@ -580,31 +627,6 @@ Slack App、OAuth Scope、Event Subscriptions、Webhook、Cloudflare Tunnel を�
 n8n と `cloudflared` の両方が起動している間、Slack から Sales AI Agent を利用できます。
 
 ![Lesson 07 Slack Sales AI Agent](./docs/images/197_n8n_Sales_AI_Agent_v3_Final_Execution.png)
-
-## 📦 Workflow サンプル
-
-各 Lesson で完成した Workflow は JSON として保存しています。
-
-```text
-workflows/
-├─ 01-basic-workflow.json
-├─ 02-gemini-integration.json
-├─ 03-ai-agent.json
-├─ 04-tool-calling.json
-├─ 05-human-in-the-loop.json
-└─ 06-slack-sales-ai-agent.json
-```
-
-Lesson を見ながら自分で Workflow を作成したあと、JSON を n8n へ Import
-して完成版と比較できます。
-
-Workflow JSON には API キー本体を保存せず、Credential は n8n
-側で管理します。
-
-> **注意：** Workflow を GitHub へ公開する前に、Export した JSON に API
-> キーやその他の秘密情報が含まれていないことを必ず確認してください。
-
----
 
 ## 🖥️ 開発・実習環境
 
