@@ -89,8 +89,7 @@ n8n の Slack Credential では、Slack App
 
 そのため、次に Slack App を作成します。
 
-> \[!IMPORTANT\] Bot User OAuth Token、Signing Secret、Client Secret
-> などの認証情報は、GitHub や教材へ公開しないでください。
+> **IMPORTANT** Bot User OAuth Token、Signing Secret、Client Secret などの認証情報は、GitHub や教材へ公開しないでください。
 
 ---
 
@@ -257,8 +256,7 @@ https://xxxxx.trycloudflare.com
 
 この URL は後ほど `compose.yaml` と Slack の設定で使用するため、コピーしておきます。
 
-> [!IMPORTANT]
-> 教材のスクリーンショットに表示されている URL をコピーするのではなく、必ず自分の PowerShell に表示された `trycloudflare.com` の URL を使用してください。
+> **IMPORTANT** 教材のスクリーンショットに表示されている URL をコピーするのではなく、必ず自分の PowerShell に表示された `trycloudflare.com` の URL を使用してください。
 
 ### 5-5. compose.yaml に WEBHOOK_URL を設定する
 
@@ -297,7 +295,7 @@ environment:
 - WEBHOOK_URL=https://<Cloudflare-Tunnelで発行されたURL>/
 ```
 
-> [!IMPORTANT] > `WEBHOOK_URL` は Cloudflare Tunnel の公開 URL と一致させます。教材作成者の URL や他の受講者の URL は使用できません。
+> **IMPORTANT** `WEBHOOK_URL` は Cloudflare Tunnel の公開 URL と一致させます。教材作成者の URL や他の受講者の URL は使用できません。
 
 ### 5-6. compose.yaml の変更を n8n に反映する
 
@@ -546,7 +544,7 @@ app_mention
 
 ![app mentionイベントを追加](images/150_Slack_BotEvent_app_mention.png)
 
-> **IMPORTANT:** Event を追加した後は、Slack 側の `Save Changes`> まで実行してください。Event を追加しただけでは設定が反映されません。
+> **IMPORTANT:** Event を追加した後は、Slack 側の `Save Changes` まで実行してください。Event を追加しただけでは設定が反映されません。
 
 n8n を Test URL の待受状態にして、Slack から Bot をメンションします。
 

@@ -14,8 +14,7 @@
         0
       ],
       "id": "d25c7f56-4a15-467d-af02-0bc93628dffb",
-      "name": "When chat message received",
-      "webhookId": "10a67e32-459f-414b-92ec-70f30c567c8e"
+      "name": "When chat message received"
     },
     {
       "parameters": {
@@ -41,13 +40,7 @@
         208
       ],
       "id": "67cf45c9-46f1-4f25-8eb9-c89c89d38c94",
-      "name": "Google Gemini Chat Model",
-      "credentials": {
-        "googlePalmApi": {
-          "id": "3lqW0SyXCfpuUDc0",
-          "name": "Google Gemini(PaLM) Api account"
-        }
-      }
+      "name": "Google Gemini Chat Model"
     },
     {
       "parameters": {
@@ -65,8 +58,7 @@
         208
       ],
       "id": "eb5d1605-7cbe-45ca-a841-bcd5745aa991",
-      "name": "Chat",
-      "webhookId": "39a7d962-c8f4-4e1c-9879-f86868458817"
+      "name": "Chat"
     },
     {
       "parameters": {
@@ -94,8 +86,7 @@
         0
       ],
       "id": "d8910019-c8d7-4e6a-b585-53d23f19f94a",
-      "name": "Chat1",
-      "webhookId": "c3020fc6-7448-46d2-9dcf-e649b969cc88"
+      "name": "Chat1"
     }
   ],
   "pinData": {},
@@ -161,12 +152,6 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "ab38827a-4da5-42c2-be5f-feedbb6ed853",
-  "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "786e55837483dba32c2a3f49da8295e86a69bf5c86f4beea8ff7099c3a9179a0"
-  },
   "nodeGroups": [],
-  "id": "VWgcCNXmSG6KuVuq",
   "tags": []
 }
