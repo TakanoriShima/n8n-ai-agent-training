@@ -17,7 +17,7 @@ n8n と Gemini を利用して、**企業業務で活用できる AI
 までを段階的に実装しながら、**「通常の業務自動化」と「AI
 エージェント」の違いを理解すること**を目的としています。
 
-題材として、営業担当者の商談準備を支援する\
+題材として、営業担当者の商談準備を支援する
 **「営業提案 AI エージェント」** を構築します。
 
 ---
@@ -104,34 +104,16 @@ AI Agent では、LLM が目的や状況を解釈し、**利用可能な Tool
 
 ---
 
-Lesson 内容 主な学習テーマ 状態
-
----
-
-[Lesson 01](./docs/lesson01-setup.md) n8n Community Edition Docker / n8n ✅ 完成
-の環境構築
-
-[Lesson 02](./docs/lesson02-basic-workflow.md) 基本 Workflow の構築 Trigger / JSON / ✅ 完成
-Expression / If
-
-[Lesson Gemini を n8n に接続する Gemini API / LLM / Prompt ✅ 完成
-03](./docs/lesson03-gemini-integration.md)
-
-[Lesson 04](./docs/lesson04-ai-agent.md) AI Agent を構築する AI Agent / Chat Model / ✅ 完成
-Tool なし Agent の限界
-
-[Lesson 05](./docs/lesson05-tool-calling.md) Tool Calling を実装する Code Tool / Tool Calling ✅ 完成
-/ Agent による Tool 選択
-
-[Lesson Human-in-the-loop を実装する Chat Trigger / Human ✅ 完成
-06](./docs/lesson06-human-in-the-loop.md) Review / 承認・却下 / AI  
- ガバナンス
-
-[Lesson Slack と連携した Sales AI Slack / OAuth / Webhook / ✅ 完成
-07](./docs/lesson07-slack-sales-ai-agent.md) Agent を構築 外部サービス連携
-
-Lesson 08 営業提案 AI Agent 設計 / 業務適用 🚧
-エージェント完成・発展演習 制作予定
+| Lesson                                               | 内容                                   | 主な学習テーマ                                           | 状態        |
+| ---------------------------------------------------- | -------------------------------------- | -------------------------------------------------------- | ----------- |
+| [Lesson 01](./docs/lesson01-setup.md)                | n8n Community Edition の環境構築       | Docker / n8n                                             | ✅ 完成     |
+| [Lesson 02](./docs/lesson02-basic-workflow.md)       | 基本 Workflow の構築                   | Trigger / JSON / Expression / If                         | ✅ 完成     |
+| [Lesson 03](./docs/lesson03-gemini-integration.md)   | Gemini を n8n に接続する               | Gemini API / LLM / Prompt                                | ✅ 完成     |
+| [Lesson 04](./docs/lesson04-ai-agent.md)             | AI Agent を構築する                    | AI Agent / Chat Model / Tool なし Agent の限界           | ✅ 完成     |
+| [Lesson 05](./docs/lesson05-tool-calling.md)         | Tool Calling を実装する                | Code Tool / Tool Calling / Agent による Tool 選択        | ✅ 完成     |
+| [Lesson 06](./docs/lesson06-human-in-the-loop.md)    | Human-in-the-loop を実装する           | Chat Trigger / Human Review / 承認・却下 / AI ガバナンス | ✅ 完成     |
+| [Lesson 07](./docs/lesson07-slack-sales-ai-agent.md) | Slack と連携した Sales AI Agent を構築 | Slack / OAuth / Webhook / 外部サービス連携               | ✅ 完成     |
+| Lesson 08                                            | 営業提案 AI Agent 完成・発展演習       | Agent 設計 / 業務適用                                    | 🚧 制作予定 |
 
 ---
 

@@ -136,15 +136,13 @@ Permissions](images/115_slack_oauth_permissions_initial.png)
 
 この Lesson では最終的に、次の Scope を利用します。
 
-Scope 用途
-
----
-
-`app_mentions:read` Bot へのメンションを受信する
-`channels:read` Public Channel の情報を取得する
-`chat:write` Slack へメッセージを投稿する
-`groups:read` Private Channel の情報を取得する
-`users:read` User 情報を取得する
+| Scope               | 用途                             |
+| ------------------- | -------------------------------- |
+| `app_mentions:read` | Bot へのメンションを受信する     |
+| `channels:read`     | Public Channel の情報を取得する  |
+| `chat:write`        | Slack へメッセージを投稿する     |
+| `groups:read`       | Private Channel の情報を取得する |
+| `users:read`        | User 情報を取得する              |
 
 ![Bot Token Scopes](images/119_slack_bot_token_scopes_complete.png)
 
@@ -405,8 +403,7 @@ Cloudflare URL
 
 の整合性が重要です。
 
-> [!NOTE]
-> Quick Tunnel は学習・開発環境で手軽に Webhook を試すための構成です。PC や Tunnel を停止すると利用できなくなります。24 時間運用する場合は、常時インターネットから到達できる n8n 環境や正式な Tunnel 構成を検討します。
+> **NOTE:** Quick Tunnel は学習・開発環境で手軽に Webhook を試すための構成です。PC や Tunnel を停止すると利用できなくなります。24 時間運用する場合は、常時インターネットから到達できる n8n 環境や正式な Tunnel 構成を検討します。
 
 ---
 
@@ -549,8 +546,7 @@ app_mention
 
 ![app mentionイベントを追加](images/150_Slack_BotEvent_app_mention.png)
 
-> \[!IMPORTANT\] Event を追加した後は、Slack 側の `Save Changes`
-> まで実行してください。Event を追加しただけでは設定が反映されません。
+> **IMPORTANT:** Event を追加した後は、Slack 側の `Save Changes`> まで実行してください。Event を追加しただけでは設定が反映されません。
 
 n8n を Test URL の待受状態にして、Slack から Bot をメンションします。
 
@@ -769,14 +765,10 @@ Workflow が自動実行されます。
 
 この違いは Webhook 型 Workflow を運用するうえで重要です。
 
-URL 用途 Execute workflow
-
----
-
-Test URL 開発・テスト 必要
-Production URL 通常運用 不要
-
----
+| URL            | 用途         | Execute workflow |
+| -------------- | ------------ | ---------------- |
+| Test URL       | 開発・テスト | 必要             |
+| Production URL | 通常運用     | 不要             |
 
 ## 15. System Message で Sales AI Agent の役割を定義する
 
