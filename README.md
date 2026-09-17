@@ -882,3 +882,39 @@ Human-in-the-loop
 Lesson 07
 Slack / Webhook / 外部サービス連携
 ```
+
+ここまでの実装によって、
+
+```text
+通常の業務自動化
+    ↓
+LLM を Workflow に組み込む
+    ↓
+AI Agent に判断を任せる
+    ↓
+必要な Tool を AI が選択する
+    ↓
+重要な Tool の実行前に人間が確認する
+    ↓
+Slack などの外部サービスから AI Agent を利用する
+```
+
+という、業務向け AI Agent の基本的な発展を一連の Workflow として体験できる構成になりました。
+
+Lesson 07 では、ローカル PC 上の n8n と Slack を Cloudflare Tunnel / Webhook で接続し、Slack から Sales AI Agent を呼び出して回答を受け取るところまで実装しています。
+
+```text
+Slack
+  ↓
+Cloudflare Tunnel
+  ↓
+n8n / Slack Trigger
+  ↓
+AI Agent + Gemini
+  ↓
+Slack
+```
+
+次の実装：
+
+> **Lesson 08 — 営業提案 AI エージェント完成・発展演習**
