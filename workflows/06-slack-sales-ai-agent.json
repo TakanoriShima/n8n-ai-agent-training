@@ -1,0 +1,109 @@
+{
+  "name": "Lesson 07 - Slack AI Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "trigger": [
+          "app_mention"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.slackTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e49fbe5b-c4c2-4613-86bb-a072301bfe2e",
+      "name": "Slack Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text.replace(/<@[^>]+>/g, '').trim() }}",
+        "options": {
+          "systemMessage": "あなたは法人営業担当者を支援する「Sales AI Agent」です。\n\nユーザーからの営業に関する質問や依頼に対して、実務でそのまま活用できる具体的な回答を提供してください。\n\n主な支援内容：\n・営業メールや提案文の作成\n・初回商談やヒアリングの準備\n・顧客課題の整理\n・提案内容や営業施策のアイデア出し\n・商談後のフォローアップ文面の作成\n\n回答するときは、以下のルールを守ってください。\n・日本語で回答してください。\n・結論や重要な内容を先に示してください。\n・具体的で実務に使いやすい内容にしてください。\n・必要に応じて箇条書きを使用してください。\n・Slackで読みやすい簡潔な文章にしてください。\n・「###」や「**」などのMarkdown記号は使用しないでください。\n・不明な情報を事実として作らないでください。\n・顧客名、商品、価格など必要な情報が不足している場合は、必要に応じて確認してください。"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "59129c9c-aaef-4bd5-9b2a-6bd7c7a51148",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        96,
+        208
+      ],
+      "id": "394a482e-1093-4246-a4a1-62fc5aa9249b",
+      "name": "Google Gemini Chat Model"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "text": "={{ $json.output }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        592,
+        0
+      ],
+      "id": "d7bd2cf1-203d-4775-9aee-ce94fbd162ae",
+      "name": "Send a message"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Slack Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "nodeGroups": [],
+  "tags": []
+}
