@@ -25,13 +25,13 @@
             {
               "id": "a1f55554-1200-4e86-aa7c-44ad27f3d90b",
               "name": "company",
-              "value": "株式会社ABC",
+              "value": "株式会社サンプル製造",
               "type": "string"
             },
             {
               "id": "0b97b983-53d6-4eae-8b7f-298b6998a1b1",
               "name": "request",
-              "value": "初回商談の提案を準備してください",
+              "value": "製造現場の業務効率化に向けた初回商談の提案を準備してください",
               "type": "string"
             }
           ]
@@ -57,7 +57,7 @@
         "messages": {
           "values": [
             {
-              "content": "=sales_person\n山田\n\ncompany\n株式会社サンプル製造\n\nrequest\n製造現場の業務効率化に向けた初回商談の提案を準備してください"
+              "content": "=あなたは法人営業を支援するAIアシスタントです。\n\n以下の情報をもとに、初回商談に向けた営業提案を作成してください。\n\n営業担当者：\n{{ $json.sales_person }}\n\n商談先企業：\n{{ $json.company }}\n\n依頼内容：\n{{ $json.request }}\n\n以下の形式で回答してください。\n\n1. 商談の目的\n2. ヒアリングすべき項目\n3. 想定される顧客課題\n4. 提案の方向性\n5. 次のアクション"
             }
           ]
         },
