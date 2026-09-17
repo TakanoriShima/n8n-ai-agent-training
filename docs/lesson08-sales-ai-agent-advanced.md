@@ -7,21 +7,21 @@ Lesson 08 では、この Workflow をさらに発展させます。
 
 今回のポイントは、AI Agent に単に文章を生成させるだけではなく、
 
--   計算が必要な場合は Code Tool を利用する
--   高率な値引きを伴う提案では Human Review を要求する
--   承認された場合だけ処理を続行する
--   拒否された場合は AI Agent が代替案を提示する
+- 計算が必要な場合は Code Tool を利用する
+- 高率な値引きを伴う提案では Human Review を要求する
+- 承認された場合だけ処理を続行する
+- 拒否された場合は AI Agent が代替案を提示する
 
 という、**Tool Calling と Human-in-the-loop を組み合わせた営業 AI
 Agent** を構築することです。
 
-------------------------------------------------------------------------
+---
 
 ## 1. この Lesson で作るもの
 
 完成する Workflow の基本構成は次のとおりです。
 
-``` text
+```text
 Slack
   ↓
 Slack Trigger
@@ -45,11 +45,11 @@ Slack
 ![Advanced Sales AI Agent の初期
 Workflow](images/198_n8n_Sales_AI_Agent_Advanced_Initial_Workflow.png)
 
-> \[!NOTE\] この Lesson は Lesson 07 で作成した Slack Sales AI Agent
+> [!NOTE] この Lesson は Lesson 07 で作成した Slack Sales AI Agent
 > を発展させる演習です。Slack App、Cloudflare Tunnel、Gemini Credential
 > などの基本設定は Lesson 07 で完了していることを前提とします。
 
-------------------------------------------------------------------------
+---
 
 ## 2. なぜ Tool Calling が必要なのか
 
@@ -61,7 +61,7 @@ LLM は文章生成を得意としますが、金額計算のような処理ま�
 AI Agent はユーザーの依頼内容を判断し、必要なときに Tool
 を呼び出します。
 
-``` text
+```text
 ユーザー
   ↓
 AI Agent
@@ -80,7 +80,7 @@ AI Agent
 この構成により、**AI に判断を任せながら、計算などの処理は専用 Tool
 に担当させる**ことができます。
 
-------------------------------------------------------------------------
+---
 
 ## 3. 通常の値引き計算用 Code Tool を追加する
 
@@ -110,22 +110,22 @@ Description](images/201_n8n_Code_Tool_Description_Configured.png)
 
 Code Tool では、入力された金額と値引率から値引き後の金額を計算します。
 
-``` javascript
-const [amount, discountRate] = query.split(',').map(Number);
+```javascript
+const [amount, discountRate] = query.split(",").map(Number);
 
 const discountedAmount = amount * (1 - discountRate / 100);
 
 return JSON.stringify({
   originalAmount: amount,
   discountRate: discountRate,
-  discountedAmount: discountedAmount
+  discountedAmount: discountedAmount,
 });
 ```
 
 ![値引き計算 Code
 Tool](images/202_n8n_Code_Tool_Discount_Calculation_Configured.png)
 
-> \[!IMPORTANT\] AI Agent が Tool に渡す入力形式と、Code Tool
+> [!IMPORTANT] AI Agent が Tool に渡す入力形式と、Code Tool
 > が想定する入力形式を一致させる必要があります。この例では `850000,10`
 > のような「金額,値引率」の文字列を想定しています。
 
@@ -133,13 +133,13 @@ Code Tool を AI Agent の Tool として接続します。
 
 ![Code Tool 接続](images/203_n8n_Sales_AI_Agent_Code_Tool_Connected.png)
 
-------------------------------------------------------------------------
+---
 
 ## 4. 値引き計算を Slack からテストする
 
 Slack から次のように依頼します。
 
-``` text
+```text
 @n8n Sales AI Agent
 850,000円の商品を10%値引きした場合の金額を計算し、その金額を使った営業提案を作成してください。
 ```
@@ -152,14 +152,14 @@ AI Agent は Code Tool
 
 この時点で、
 
-``` text
+```text
 850,000円 × (1 - 0.10)
 = 765,000円
 ```
 
 という計算結果を営業提案へ反映できています。
 
-------------------------------------------------------------------------
+---
 
 ## 5. Test URL と Production URL を整理する
 
@@ -184,14 +184,14 @@ Workflow を常時 Slack から利用する場合は Production URL を使用し
 ![Slack Trigger Production
 URL](images/209_n8n_Advanced_Agent_Slack_Trigger_Production_URL.png)
 
-> \[!IMPORTANT\] Slack App の Event Subscriptions に登録する Request URL
+> [!IMPORTANT] Slack App の Event Subscriptions に登録する Request URL
 > は、実際に利用する Workflow の Production URL と一致させます。
 >
 > Workflow を複製すると Webhook の識別部分が変わることがあります。Lesson
 > 07 の Workflow を複製して Lesson 08 を作成した場合は、Lesson 08 側の
 > Production URL を確認してください。
 
-------------------------------------------------------------------------
+---
 
 ## 6. Advanced Workflow を Publish する
 
@@ -204,7 +204,7 @@ Publish 後、n8n は Slack からのイベントを待ち受けます。
 ![Workflow
 Published](images/211_n8n_Advanced_Agent_Workflow_Published.png)
 
-------------------------------------------------------------------------
+---
 
 ## 7. Slack Event Subscriptions の Request URL を更新する
 
@@ -227,12 +227,12 @@ Verified](images/213_Slack_Advanced_Agent_Request_URL_Verified.png)
 ![Production URL
 Saved](images/214_Slack_Advanced_Agent_Production_URL_Saved.png)
 
-> \[!NOTE\] Cloudflare Quick Tunnel を利用している場合、Tunnel
+> [!NOTE] Cloudflare Quick Tunnel を利用している場合、Tunnel
 > を再作成すると `trycloudflare.com`
 > のホスト名が変わることがあります。その場合は n8n の `WEBHOOK_URL` と
 > Slack Event Subscriptions の Request URL の両方を更新します。
 
-------------------------------------------------------------------------
+---
 
 ## 8. Production 環境で Code Tool の実行を確認する
 
@@ -254,7 +254,7 @@ Success](images/216_n8n_Advanced_Agent_Code_Tool_Execution_Success.png)
 **Executions を確認し、AI Agent が実際に Tool
 を選択して実行したことを確認する**ことが大切です。
 
-------------------------------------------------------------------------
+---
 
 ## 9. Human Review を追加する
 
@@ -271,7 +271,7 @@ Slack の `Send and wait` が Human Review ノードとして追加されます�
 ![Slack Human Review
 初期設定](images/218_n8n_Slack_Human_Review_Initial_Setup.png)
 
-------------------------------------------------------------------------
+---
 
 ## 10. 承認者を設定する
 
@@ -285,7 +285,7 @@ Approver](images/219_n8n_Slack_Human_Review_Approver_Configured.png)
 
 実務では、営業責任者、マネージャー、部門責任者などを承認者として設定することが考えられます。
 
-------------------------------------------------------------------------
+---
 
 ## 11. Human Review のメッセージを設定する
 
@@ -294,7 +294,7 @@ Approver](images/219_n8n_Slack_Human_Review_Approver_Configured.png)
 
 最終版では次の Message を使用します。
 
-``` text
+```text
 Sales AI Agent が営業提案に関する Tool の実行を要求しています。
 
 実行する Tool：
@@ -316,22 +316,22 @@ Message](images/220_n8n_Slack_Human_Review_Message_Configured.png)
 
 そこで、
 
-``` javascript
-JSON.stringify($tool.parameters, null, 2)
+```javascript
+JSON.stringify($tool.parameters, null, 2);
 ```
 
 を利用して、承認者が確認できる JSON 形式へ変換します。
 
-> \[!IMPORTANT\] Human-in-the-loop
+> [!IMPORTANT] Human-in-the-loop
 > では、単に「承認しますか？」と聞くだけでは不十分です。可能な範囲で、承認対象・入力内容・実行内容を人間が判断できる形で提示します。
 
-------------------------------------------------------------------------
+---
 
 ## 12. 承認・拒否ボタンを設定する
 
 `Type of Approval` を次の設定にします。
 
-``` text
+```text
 Approve and Disapprove
 ```
 
@@ -340,7 +340,7 @@ Disapprove](images/222_n8n_Human_Review_Approve_Disapprove_Configured.png)
 
 ボタン名は日本語に変更します。
 
-``` text
+```text
 Approve Button Label：承認
 Disapprove Button Label：拒否
 ```
@@ -349,7 +349,7 @@ Disapprove Button Label：拒否
 
 これにより、Slack 上で承認者が処理を明示的に判断できます。
 
-------------------------------------------------------------------------
+---
 
 ## 13. Human Review の後に実行する Tool を追加する
 
@@ -363,7 +363,7 @@ Human Review と AI Agent が接続された状態を確認します。
 ![Human Review
 Connected](images/225_n8n_Advanced_Agent_Human_Review_Connected.png)
 
-------------------------------------------------------------------------
+---
 
 ## 14. 高率値引き用 Code Tool を設定する
 
@@ -381,9 +381,8 @@ Description](images/227_n8n_Human_Review_Code_Tool_Description.png)
 JavaScript
 では値引き後の金額を計算し、承認済みであることも結果へ含めます。
 
-``` javascript
-const [amount, discountRate] =
-  query.split(',').map(Number);
+```javascript
+const [amount, discountRate] = query.split(",").map(Number);
 
 const discountedAmount = amount * (1 - discountRate / 100);
 const discountAmount = amount - discountedAmount;
@@ -394,7 +393,7 @@ return JSON.stringify({
   discountRate: discountRate,
   discountAmount: discountAmount,
   discountedAmount: discountedAmount,
-  message: "高率値引きの営業提案が承認されました"
+  message: "高率値引きの営業提案が承認されました",
 });
 ```
 
@@ -406,7 +405,7 @@ Human Review の Tool として接続します。
 ![Human Review Tool
 Connected](images/229_n8n_Advanced_Agent_Human_Review_Tool_Connected.png)
 
-------------------------------------------------------------------------
+---
 
 ## 15. AI Agent に値引きルールを追加する
 
@@ -415,7 +414,7 @@ AI Agent の System Message
 
 考え方は次のとおりです。
 
-``` text
+```text
 値引き率が20%未満
     ↓
 通常の値引き計算用 Code Tool
@@ -436,7 +435,7 @@ Human Review
 ![Human Review
 Rules](images/230_n8n_AI_Agent_Human_Review_Rules_Configured.png)
 
-> \[!WARNING\] この演習では AI Agent の System Message と Tool
+> [!WARNING] この演習では AI Agent の System Message と Tool
 > Description を使って Tool の選択方針を与えています。
 >
 > これは AI Agent
@@ -446,7 +445,7 @@ Rules](images/230_n8n_AI_Agent_Human_Review_Rules_Configured.png)
 > Switch、別
 > Workflow、承認システム、権限制御など、決定論的な仕組みでもルールを保証する設計を検討してください。
 
-------------------------------------------------------------------------
+---
 
 ## 16. v2 を Publish する
 
@@ -454,13 +453,13 @@ Human Review を追加した Workflow を Publish します。
 
 ![Publish v2](images/231_n8n_Advanced_Agent_Publish_v2_Configured.png)
 
-------------------------------------------------------------------------
+---
 
 ## 17. 10%値引き：Human Review を通らないことを確認する
 
-まず10%値引きを依頼します。
+まず 10%値引きを依頼します。
 
-``` text
+```text
 @n8n Sales AI Agent
 850,000円の商品を10%値引きした場合の金額を計算し、その金額を使った営業提案を作成してください。
 ```
@@ -479,13 +478,13 @@ Execution](images/233_n8n_Advanced_Agent_v2_Normal_Discount_Execution.png)
 このテストにより、Human Review
 を追加したからといって、すべての処理が承認待ちになるわけではないことを確認できます。
 
-------------------------------------------------------------------------
+---
 
 ## 18. 20%値引き：Human Review が起動することを確認する
 
-次に20%値引きを依頼します。
+次に 20%値引きを依頼します。
 
-``` text
+```text
 @n8n Sales AI Agent
 850,000円の商品を20%値引きした場合の金額を計算し、その金額を使った営業提案を作成してください。
 ```
@@ -497,7 +496,7 @@ Request](images/234_Slack_Human_Review_Approval_Request.png)
 
 承認者は `承認` または `拒否` を選択できます。
 
-------------------------------------------------------------------------
+---
 
 ## 19. 承認した場合の動作を確認する
 
@@ -509,7 +508,7 @@ Completed](images/235_n8n_Human_Review_Approval_Completed.png)
 承認後、高率値引き用 Code Tool
 が実行され、20%値引き後の金額を使った営業提案が Slack に返ります。
 
-``` text
+```text
 850,000円 × (1 - 0.20)
 = 680,000円
 ```
@@ -525,7 +524,7 @@ Execution](images/237_n8n_Advanced_Agent_v2_Human_Review_Approved_Execution.png)
 
 この実行は、
 
-``` text
+```text
 AI が高率値引きを判断
     ↓
 人間へ承認要求
@@ -539,14 +538,14 @@ Tool 実行
 
 という Human-in-the-loop の一連の流れです。
 
-------------------------------------------------------------------------
+---
 
 ## 20. 拒否した場合の動作を確認する
 
-同じ20%値引き依頼に対して、今度は `拒否` を選択します。
+同じ 20%値引き依頼に対して、今度は `拒否` を選択します。
 
 AI Agent
-は20%値引きを確定価格として提案せず、値引率を下げる、通常価格で再提案する、別の付加価値を検討する、といった代替案を提示します。
+は 20%値引きを確定価格として提案せず、値引率を下げる、通常価格で再提案する、別の付加価値を検討する、といった代替案を提示します。
 
 ![Rejected
 Response](images/238_Slack_Human_Review_Rejected_Response.png)
@@ -556,21 +555,21 @@ Executions でも Human Review が行われたことを確認できます。
 ![Rejected
 Execution](images/239_n8n_Advanced_Agent_v2_Human_Review_Rejected_Execution.png)
 
-> \[!IMPORTANT\] Human Review
+> [!IMPORTANT] Human Review
 > の価値は「人間が承認できる」ことだけではありません。
 >
 > **拒否された場合に AI Agent
 > がその結果を受け取り、次の行動を考えられる**ことも AI Agent 型
 > Workflow の重要な特徴です。
 
-------------------------------------------------------------------------
+---
 
 ## 21. Tool の入力内容を承認者へ表示する
 
 初期設定では `$tool.parameters` をそのまま Message に埋め込むと、Slack
 で次のように表示される場合があります。
 
-``` text
+```text
 [object Object]
 ```
 
@@ -578,7 +577,7 @@ Execution](images/239_n8n_Advanced_Agent_v2_Human_Review_Rejected_Execution.png)
 
 そこで Message を次のように変更します。
 
-``` text
+```text
 入力内容：
 {{ JSON.stringify($tool.parameters, null, 2) }}
 ```
@@ -590,7 +589,7 @@ Configured](images/240_n8n_Human_Review_Parameters_JSON_Configured.png)
 
 ![Publish v3](images/241_n8n_Advanced_Agent_Publish_v3_Configured.png)
 
-再度20%値引きを依頼すると、Slack の承認画面で Tool
+再度 20%値引きを依頼すると、Slack の承認画面で Tool
 の入力内容を確認できるようになります。
 
 ![Tool Parameters
@@ -598,7 +597,7 @@ Displayed](images/242_Slack_Human_Review_Tool_Parameters_Displayed.png)
 
 今回の例では次のような情報が表示されます。
 
-``` json
+```json
 {
   "input": "850000,20"
 }
@@ -607,7 +606,7 @@ Displayed](images/242_Slack_Human_Review_Tool_Parameters_Displayed.png)
 これにより、承認者は AI Agent がどの値を Tool
 へ渡そうとしているのか確認できます。
 
-------------------------------------------------------------------------
+---
 
 ## 22. 最終版を Publish する
 
@@ -618,9 +617,9 @@ Human Review Message を動作確認済みの状態へ確定し、最終版と�
 v4](images/244_n8n_Sales_AI_Agent_Advanced_v4_Publish.png)
 
 この Lesson の完成 Workflow
-は、次の3つの重要な要素を組み合わせています。
+は、次の 3 つの重要な要素を組み合わせています。
 
-``` text
+```text
 Tool Calling
 +
 Human-in-the-loop
@@ -628,13 +627,13 @@ Human-in-the-loop
 Slack / Webhook
 ```
 
-------------------------------------------------------------------------
+---
 
 ## 23. 完成した AI Agent の判断フロー
 
 最終的な処理の考え方を整理します。
 
-``` text
+```text
 Slack から営業依頼
         ↓
 Slack Trigger
@@ -664,7 +663,7 @@ Code Tool                    Human Review
 AI Agent は単に回答文を生成しているのではなく、**依頼内容に応じて Tool
 と Human Review を使い分けるオーケストレーター**として動作します。
 
-------------------------------------------------------------------------
+---
 
 ## 24. 実務で発展させる場合
 
@@ -672,18 +671,18 @@ AI Agent は単に回答文を生成しているのではなく、**依頼内容
 
 実務では、さらに次のような拡張が考えられます。
 
--   Salesforce / HubSpot などから顧客情報を取得する
--   SharePoint / Google Drive から商品資料を検索する
--   見積書を自動生成する
--   値引率に応じて承認者を変更する
--   承認履歴をデータベースへ保存する
--   営業提案をメール下書きとして作成する
--   顧客ごとの過去商談履歴を AI Agent に参照させる
--   高額案件では複数段階の承認を要求する
+- Salesforce / HubSpot などから顧客情報を取得する
+- SharePoint / Google Drive から商品資料を検索する
+- 見積書を自動生成する
+- 値引率に応じて承認者を変更する
+- 承認履歴をデータベースへ保存する
+- 営業提案をメール下書きとして作成する
+- 顧客ごとの過去商談履歴を AI Agent に参照させる
+- 高額案件では複数段階の承認を要求する
 
 たとえば、承認ルールを次のように発展させることもできます。
 
-``` text
+```text
 10%未満
   → 自動承認
 
@@ -698,7 +697,7 @@ AI Agent は単に回答文を生成しているのではなく、**依頼内容
 と業務ルールを組み合わせることで、単なるチャットボットではなく、**実際の業務プロセスへ組み込める
 AI Agent**へ発展させられます。
 
-------------------------------------------------------------------------
+---
 
 ## 25. Workflow を Export する
 
@@ -706,12 +705,12 @@ AI Agent**へ発展させられます。
 
 この教材では、公開用 Workflow を次のファイルとして保存する想定です。
 
-``` text
+```text
 workflows/
 └─ 07-sales-ai-agent-advanced.json
 ```
 
-> \[!WARNING\] GitHub へ公開する前に、Workflow JSON に
+> [!WARNING] GitHub へ公開する前に、Workflow JSON に
 > Credential、Credential ID、Webhook ID、Workflow ID、Instance ID、Slack
 > Channel ID、個人を識別する Slack User ID、API
 > キー、アクセストークンなどが含まれていないことを確認してください。
@@ -721,20 +720,20 @@ workflows/
 
 Import 後に再設定する主な項目は次のとおりです。
 
--   Google Gemini API Credential
--   Slack Credential
--   Slack Channel
--   Human Review の承認先ユーザー
--   Slack Event Subscriptions の Request URL
--   Cloudflare Tunnel / `WEBHOOK_URL`
--   その他の環境依存設定
+- Google Gemini API Credential
+- Slack Credential
+- Slack Channel
+- Human Review の承認先ユーザー
+- Slack Event Subscriptions の Request URL
+- Cloudflare Tunnel / `WEBHOOK_URL`
+- その他の環境依存設定
 
-> \[!NOTE\] Workflow JSON
+> [!NOTE] Workflow JSON
 > は「完成品をそのまま動かすための秘密情報入りファイル」ではなく、**Workflow
 > の構造・Node・接続・Expression・Prompt
 > を再利用するための教材**として公開します。
 
-------------------------------------------------------------------------
+---
 
 ## 26. Lesson 08 まとめ
 
@@ -743,21 +742,21 @@ Import 後に再設定する主な項目は次のとおりです。
 
 学習したポイントは次のとおりです。
 
--   AI Agent から Code Tool を利用する
--   Tool Description が AI Agent の Tool 選択に影響する
--   Slack Trigger の Test URL と Production URL を使い分ける
--   Workflow の複製時には Production Webhook URL を確認する
--   Human Review を AI Agent に接続する
--   Slack DM で承認・拒否を行う
--   承認後だけ Tool を実行する
--   拒否結果を AI Agent が受け取り、代替案を生成する
--   Tool Parameters を JSON 化して承認者へ提示する
--   AI Agent の判断と、人間による業務統制を組み合わせる
--   Executions から実際の Tool Calling を確認する
+- AI Agent から Code Tool を利用する
+- Tool Description が AI Agent の Tool 選択に影響する
+- Slack Trigger の Test URL と Production URL を使い分ける
+- Workflow の複製時には Production Webhook URL を確認する
+- Human Review を AI Agent に接続する
+- Slack DM で承認・拒否を行う
+- 承認後だけ Tool を実行する
+- 拒否結果を AI Agent が受け取り、代替案を生成する
+- Tool Parameters を JSON 化して承認者へ提示する
+- AI Agent の判断と、人間による業務統制を組み合わせる
+- Executions から実際の Tool Calling を確認する
 
 Lesson 02 から Lesson 08 までの流れを整理すると、次のようになります。
 
-``` text
+```text
 通常の Workflow
         ↓
 Gemini / LLM
