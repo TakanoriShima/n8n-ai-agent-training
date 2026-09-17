@@ -858,118 +858,27 @@ AI が Tool の使用を判断
 
 **現在：Lesson 07 完成**
 
-ここまでに、
+Lesson 01〜07 を通して、AI Agent を段階的に発展させてきました。
 
 ```text
 Lesson 01
 n8n 環境構築
-      ↓
+    ↓
 Lesson 02
 通常の Workflow
-      ↓
+    ↓
 Lesson 03
 Gemini / LLM 連携
-      ↓
+    ↓
 Lesson 04
 AI Agent + Gemini
-      ↓
+    ↓
 Lesson 05
 AI Agent + Tool Calling
-      ↓
+    ↓
 Lesson 06
 Human-in-the-loop
-```
-
-まで実装しました。
-
-Lesson 06 では、Lesson 05 で構築した Tool Calling
-に、人間による承認プロセスを追加しました。
-
-```text
-                 AI Agent
-                    │
-          ┌─────────┴─────────┐
-          ↓                   ↓
- Gemini Chat Model       Tool Calling
-                              ↓
-                        Human review
-                         ↙        ↘
-                    Approve     Decline
-                       ↓           ↓
-                  Code Tool     実行しない
-```
-
-これにより、
-
-```text
-AI が判断する
-      ↓
-Tool の使用を要求する
-      ↓
-人間が確認する
-   ↙        ↘
-承認        却下
- ↓           ↓
-実行       実行しない
-```
-
-という **Human-in-the-loop を含む AI Agent の制御**を実装しました。
-
-Lesson 04〜06 を通して、
-
-```text
-AI Agent
-   ↓
-Tool を利用できる
-   ↓
-必要な Tool を AI が選択する
-   ↓
-重要な Tool の実行前に人間が確認する
-```
-
-という段階的な発展を確認できます。
-
-これは、AI Agent にすべての操作を無条件で任せるのではなく、
-
-> **AI の自律性を活用しながら、重要な操作の最終判断を人間に残す**
-
-という、企業で AI Agent
-を活用する際の基本的なガバナンス設計につながります。
-
-Lesson 07 では、AI Agent を Slack へ接続し、外部サービスからイベントを受け取って回答を返す構成へ発展させました。
-
-```text
-Slack
-  ↓
-Cloudflare Tunnel
-  ↓
-n8n / Slack Trigger
-  ↓
-AI Agent + Gemini
-  ↓
-Slack
-```
-
-これにより、Lesson 01〜07 を通して、
-
-```text
-n8n 環境構築
     ↓
-通常の Workflow
-    ↓
-LLM 連携
-    ↓
-AI Agent
-    ↓
-Tool Calling
-    ↓
-Human-in-the-loop
-    ↓
+Lesson 07
 Slack / Webhook / 外部サービス連携
 ```
-
-までを段階的に実装しました。
-
-次の実装：
-
-> **Lesson 08 --- 営業提案 AI エージェント完成・発展演習**
