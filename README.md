@@ -113,7 +113,7 @@ AI Agent では、LLM が目的や状況を解釈し、**利用可能な Tool
 | [Lesson 05](./docs/lesson05-tool-calling.md)         | Tool Calling を実装する                | Code Tool / Tool Calling / Agent による Tool 選択        | ✅ 完成     |
 | [Lesson 06](./docs/lesson06-human-in-the-loop.md)    | Human-in-the-loop を実装する           | Chat Trigger / Human Review / 承認・却下 / AI ガバナンス | ✅ 完成     |
 | [Lesson 07](./docs/lesson07-slack-sales-ai-agent.md) | Slack と連携した Sales AI Agent を構築 | Slack / OAuth / Webhook / 外部サービス連携               | ✅ 完成     |
-| Lesson 08                                            | 営業提案 AI Agent 完成・発展演習       | Agent 設計 / 業務適用                                    | 🚧 制作予定 |
+| [Lesson 08](./docs/lesson08-sales-ai-agent-advanced.md) | 営業提案 AI Agent 完成・発展演習       | Tool Calling / Human Review / Slack / Agent 設計          | ✅ 完成     |
 
 ---
 
@@ -128,12 +128,14 @@ workflows/
 ├─ 03-ai-agent.json
 ├─ 04-tool-calling.json
 ├─ 05-human-in-the-loop.json
-└─ 06-slack-sales-ai-agent.json
+├─ 06-slack-sales-ai-agent.json
+└─ 07-sales-ai-agent-advanced.json
 ```
 
 これらの JSON は n8n に Import して、教材の Workflow を再現するために利用できます。
 
 > **IMPORTANT** 公開用の Workflow JSON からは、セキュリティと環境依存情報の除去を目的として、Credential、Credential ID、Webhook ID、Workflow ID、Instance ID などを削除しています。
+> Slack 連携 Workflow では、Slack Channel ID や Human Review の承認先ユーザーなどの環境依存情報も削除しています。
 > そのため、Import しただけではすべての Workflow がそのまま動作するわけではありません。
 
 Import 後は、各 Lesson の手順に従って、自分の環境で必要な設定を行ってください。
@@ -143,6 +145,7 @@ Import 後は、各 Lesson の手順に従って、自分の環境で必要な�
 - Gemini API Credential
 - Slack Credential
 - Slack Channel
+- Human Review の Slack 承認者
 - Webhook URL
 - その他、利用環境に依存する設定
 
@@ -209,7 +212,7 @@ Workflow を実行
 
 ## 🏗️ 現在の実装
 
-現在、**Lesson 07 まで実装済み**です。
+現在、**Lesson 08 まで実装済み**です。
 
 ### Lesson 02：通常の Workflow
 
@@ -628,6 +631,80 @@ n8n と `cloudflared` の両方が起動している間、Slack から Sales AI 
 
 ![Lesson 07 Slack Sales AI Agent](./docs/images/197_n8n_Sales_AI_Agent_v3_Final_Execution.png)
 
+---
+
+### Lesson 08：営業提案 AI Agent 完成・発展演習
+
+Lesson 08 では、Lesson 07 で構築した Slack Sales AI Agent に、Lesson 05 の Tool Calling と Lesson 06 の Human-in-the-loop を統合します。
+
+```text
+営業担当者
+    ↓
+Slack
+@Sales AI Agent
+    ↓
+Slack Trigger
+    ↓
+AI Agent
+    │
+    ├── Google Gemini Chat Model
+    │
+    ├── Code Tool
+    │      └─ 通常の値引き計算
+    │
+    └── Human Review（Slack）
+           ↓
+       承認 / 拒否
+           ↓
+       Code Tool1
+           └─ 高率値引き計算
+    ↓
+Slack
+Send a message
+    ↓
+営業担当者へ回答
+```
+
+例えば、850,000円の商品を10%値引きする依頼では、AI Agent が通常の Code Tool を選択し、765,000円を使った営業提案を生成します。
+
+一方、20%以上の高率値引きを含む依頼では、AI Agent の System Message と Tool Description に設定したルールに基づき Human Review を要求します。
+
+```text
+20%未満の値引き
+    ↓
+通常の Code Tool
+    ↓
+営業提案を生成
+
+20%以上の値引き
+    ↓
+Human Review
+   ↙       ↘
+承認       拒否
+ ↓          ↓
+Code Tool1  未承認の価格を
+ ↓          確定価格として提示しない
+営業提案
+```
+
+Slack には Tool 名と入力内容を表示した承認メッセージを送り、人間が `承認` または `拒否` を選択できます。
+
+![Lesson 08 Human Review Approval Request](./docs/images/234_Slack_Human_Review_Approval_Request.png)
+
+承認した場合は、高率値引き用 Code Tool の結果を利用して営業提案を生成します。
+
+![Lesson 08 Human Review Approved](./docs/images/236_Slack_Human_Review_Approved_Sales_Proposal.png)
+
+拒否した場合は、承認されていない高率値引きを確定価格として提示せず、承認を得られなかったことをユーザーへ伝えます。
+
+![Lesson 08 Human Review Rejected](./docs/images/238_Slack_Human_Review_Rejected_Response.png)
+
+> **IMPORTANT**
+> Lesson 08 の「20%以上なら Human Review」という条件は、AI Agent の System Message と Tool Description に基づく Tool 選択として実装しています。
+> 実務で承認ルールを確実に強制する必要がある場合は、If / Switch、別 Workflow、権限制御、承認システムなどの決定論的な制御を組み合わせる必要があります。
+
+Lesson 08 の完成 Workflow は `workflows/07-sales-ai-agent-advanced.json` として公開しています。
+
 ## 🖥️ 開発・実習環境
 
 本教材は以下の環境で制作・動作確認しています。
@@ -670,6 +747,7 @@ n8n-ai-agent/
 │  ├─ lesson05-tool-calling.md
 │  ├─ lesson06-human-in-the-loop.md
 │  ├─ lesson07-slack-sales-ai-agent.md
+│  ├─ lesson08-sales-ai-agent-advanced.md
 │  │
 │  └─ images/
 │     ├─ 01_n8n_owner_account_setup.png
@@ -680,7 +758,10 @@ n8n-ai-agent/
 │     ├─ 104_n8n_lesson06_decline_approved_false.png
 │     ├─ 105_n8n_lesson07_empty_workflow.png
 │     ├─ ...
-│     └─ 197_n8n_Sales_AI_Agent_v3_Final_Execution.png
+│     ├─ 197_n8n_Sales_AI_Agent_v3_Final_Execution.png
+│     ├─ 198_n8n_Sales_AI_Agent_Advanced_Initial_Workflow.png
+│     ├─ ...
+│     └─ 244_n8n_Sales_AI_Agent_Advanced_v4_Publish.png
 │
 └─ workflows/
    ├─ 01-basic-workflow.json
@@ -688,7 +769,8 @@ n8n-ai-agent/
    ├─ 03-ai-agent.json
    ├─ 04-tool-calling.json
    ├─ 05-human-in-the-loop.json
-   └─ 06-slack-sales-ai-agent.json
+   ├─ 06-slack-sales-ai-agent.json
+   └─ 07-sales-ai-agent-advanced.json
 ```
 
 ※ スクリーンショット番号 `52` および `57`〜`63` は欠番です。
@@ -856,9 +938,9 @@ AI が Tool の使用を判断
 
 ## 📌 Project Status
 
-**現在：Lesson 07 完成**
+**現在：Lesson 08 完成**
 
-Lesson 01〜07 を通して、AI Agent を段階的に発展させてきました。
+Lesson 01〜08 を通して、AI Agent を段階的に発展させてきました。
 
 ```text
 Lesson 01
@@ -897,6 +979,8 @@ AI Agent に判断を任せる
 重要な Tool の実行前に人間が確認する
     ↓
 Slack などの外部サービスから AI Agent を利用する
+    ↓
+Tool Calling と Human Review を Slack 上の実務フローとして統合する
 ```
 
 という、業務向け AI Agent の基本的な発展を一連の Workflow として体験できる構成になりました。
@@ -915,6 +999,21 @@ AI Agent + Gemini
 Slack
 ```
 
-次の実装：
+Lesson 08 では、Lesson 07 の Slack Sales AI Agent に Tool Calling と Human Review を統合し、通常の値引き計算と、人間の承認を必要とする高率値引きの処理を一つの AI Agent として完成させました。
 
-> **Lesson 08 — 営業提案 AI エージェント完成・発展演習**
+```text
+Slack
+  ↓
+AI Agent + Gemini
+  ├─ 通常値引き → Code Tool
+  └─ 高率値引き → Human Review
+                      ↓
+                   承認 / 拒否
+                      ↓
+                   Code Tool
+  ↓
+Slack
+```
+
+これにより、Workflow、LLM、AI Agent、Tool Calling、Human-in-the-loop、Slack 連携を一連の教材として体験できる構成が完成しました。
+
