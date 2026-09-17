@@ -637,10 +637,14 @@ n8n と `cloudflared` の両方が起動している間、Slack から Sales AI 
 - Ubuntu 24.04
 - Docker Desktop
 - Docker Compose
-- n8n Community Edition
+- n8n Community Edition 2.38.7（動作確認バージョン）
 - Gemini API
 - Slack
 - Cloudflare Tunnel (`cloudflared`)
+
+> **NOTE**
+> 本教材のスクリーンショットおよび操作手順は、n8n Community Edition 2.38.7 を基準に作成・動作確認しています。
+> n8n は継続的にアップデートされるため、使用するバージョンによって Node 名、設定項目、画面構成などが教材と異なる場合があります。
 
 n8n は Docker コンテナ上で実行します。
 
